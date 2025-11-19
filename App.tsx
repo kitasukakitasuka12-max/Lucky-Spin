@@ -9,7 +9,6 @@ const App: React.FC = () => {
   const [rotation, setRotation] = useState(0);
   const [wonPrize, setWonPrize] = useState<string | null>(null);
   const [hasSpun, setHasSpun] = useState<boolean>(() => {
-    // Periksa localStorage saat komponen dimuat pertama kali
     return localStorage.getItem('hasSpun') === 'true';
   });
 
@@ -22,23 +21,17 @@ const App: React.FC = () => {
     const prizeCount = PRIZES.length;
     const winningPrizeIndex = Math.floor(Math.random() * prizeCount);
     const segmentDegrees = 360 / prizeCount;
-    const spinDuration = 5000; // Harus cocok dengan durasi transisi CSS
+    const spinDuration = 5000;
 
-    // Hitung sudut yang tepat agar roda mendarat di hadiah
     const prizeAngle = (winningPrizeIndex * segmentDegrees) + (segmentDegrees / 2);
     const randomOffset = (Math.random() - 0.5) * (segmentDegrees * 0.8);
     const targetAngle = prizeAngle + randomOffset;
     
-    // Sudut akhir roda harus sedemikian rupa sehingga targetAngle pada roda
-    // berada di atas (0 derajat). Ini berarti rotasi roda harus `360 - targetAngle`.
     const destinationAngle = 360 - targetAngle;
 
-    // Hitung rotasi tambahan yang diperlukan dari posisi saat ini.
-    // Ini memastikan roda melanjutkan dari tempat terakhir berhenti.
     const currentAngle = rotation % 360;
     const rotationNeeded = (destinationAngle - currentAngle + 360) % 360;
     
-    // Tambahkan beberapa putaran penuh untuk efek visual.
     const fullSpins = 5 * 360;
     
     const totalRotation = rotation + rotationNeeded + fullSpins;
@@ -49,7 +42,7 @@ const App: React.FC = () => {
       setIsSpinning(false);
       setWonPrize(PRIZES[winningPrizeIndex]);
       setHasSpun(true);
-      localStorage.setItem('hasSpun', 'true'); // Simpan status ke localStorage
+      localStorage.setItem('hasSpun', 'true');
     }, spinDuration);
   };
 
@@ -58,31 +51,26 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-800 to-purple-900 text-white flex flex-col items-center justify-center p-4 font-sans overflow-hidden">
-      <div className="text-center mb-8 animate-fade-in-down">
-        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-2 text-yellow-300" style={{ textShadow: '0 0 15px rgba(253, 224, 71, 0.7)' }}>
-          GUCCI LUCKY SPIN
-        </h1>
-        <p className="text-lg md:text-xl text-indigo-200">Putar roda dan menangkan hadiahnya!</p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-b from-sky-500 to-indigo-900 text-white flex flex-col items-center justify-center p-4 font-sans overflow-hidden">
+       <h1 className="text-4xl md:text-5xl font-extrabold text-red-600 tracking-wider mb-8" style={{ textShadow: '2px 2px 0px #8B0000, 4px 4px 0px rgba(0,0,0,0.3)' }}>
+        GUCCI LUCKY SPIN
+      </h1>
+
+      <Wheel
+        rotation={rotation}
+      />
       
-      <div className="mb-10">
-        <Wheel rotation={rotation} />
+      <div className="mt-20 text-center">
+        <button
+          onClick={handleSpinClick}
+          disabled={isSpinning || hasSpun}
+          className="px-16 py-3 bg-gradient-to-b from-red-500 to-red-700 text-white text-2xl font-bold rounded-xl border-b-4 border-red-900 shadow-lg transform active:scale-95 transition-transform duration-150 disabled:bg-gray-500 disabled:cursor-not-allowed disabled:scale-100 disabled:border-b-0 disabled:opacity-70"
+          aria-label={hasSpun ? "Anda sudah melakukan spin" : "Putar roda keberuntungan"}
+        >
+          PUTAR
+        </button>
       </div>
 
-      <button
-        onClick={handleSpinClick}
-        disabled={isSpinning || hasSpun}
-        className="px-12 py-4 bg-yellow-400 text-gray-900 font-bold text-2xl rounded-full shadow-lg hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105 disabled:bg-gray-500 disabled:cursor-not-allowed disabled:scale-100"
-        aria-label={hasSpun ? "Anda sudah melakukan spin" : "Putar roda keberuntungan"}
-      >
-        {isSpinning ? 'MEMUTAR...' : hasSpun ? 'SELESAI' : 'PUTAR!'}
-      </button>
-      
-      {!hasSpun && (
-         <p className="mt-4 text-sm text-indigo-300">Anda hanya memiliki 1 kali kesempatan.</p>
-      )}
-      
       {wonPrize && <PrizeModal prize={wonPrize} onClose={handleCloseModal} />}
     </div>
   );
