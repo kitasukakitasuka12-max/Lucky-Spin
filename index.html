@@ -19,12 +19,16 @@
       .animate-jump-in {
         animation: jump-in 0.5s ease-out forwards;
       }
-      @keyframes fade-in-down {
-        0% { opacity: 0; transform: translateY(-20px); }
-        100% { opacity: 1; transform: translateY(0); }
+      @keyframes glow {
+        0%, 100% {
+            box-shadow: 0 0 5px #fef08a, 0 0 10px #fef08a, 0 0 15px #fef08a;
+        }
+        50% {
+            box-shadow: 0 0 10px #fde047, 0 0 20px #fde047, 0 0 30px #fde047;
+        }
       }
-      .animate-fade-in-down {
-        animation: fade-in-down 0.8s ease-out forwards;
+      .light-glow {
+        animation: glow 1.5s infinite ease-in-out;
       }
     </style>
 <script type="importmap">
@@ -36,10 +40,8 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
-<body class="bg-gray-900">
+<body class="bg-[#2d1746]">
     <div id="root"></div>
-<script type="module" src="/index.tsx"></script>
 </body>
 </html>
