@@ -20,7 +20,7 @@ const PrizeModal: React.FC<PrizeModalProps> = ({ prize, onClose }) => {
         <div className="text-yellow-500 text-6xl mb-4">🎉</div>
         <h2 className="text-2xl font-bold text-gray-800 mb-2">Selamat!</h2>
         <p className="text-lg text-gray-600 mb-4">Anda memenangkan hadiah sebesar:</p>
-        <p className="text-3xl font-extrabold text-indigo-600 mb-6 bg-indigo-50 py-3 rounded-lg">{prize}</p>
+        <p className="text-3xl font-extrabold text-purple-600 mb-6 bg-purple-50 py-3 rounded-lg">{prize}</p>
         <a
           href={whatsappUrl}
           target="_blank"
