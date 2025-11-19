@@ -10,7 +10,7 @@ export const PRIZES = [
 ];
 
 // IMPORTANT: Replace with the actual admin WhatsApp number
-export const WHATSAPP_ADMIN_NUMBER = '6281234567890'; 
+export const WHATSAPP_ADMIN_NUMBER = '6281325620735'; 
 
 export const COLORS = [
   '#ef4444', // red-500
