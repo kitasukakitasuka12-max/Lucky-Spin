@@ -8,9 +8,13 @@ const App: React.FC = () => {
   const [isSpinning, setIsSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [wonPrize, setWonPrize] = useState<string | null>(null);
+  const [hasSpun, setHasSpun] = useState<boolean>(() => {
+    // Periksa localStorage saat komponen dimuat pertama kali
+    return localStorage.getItem('hasSpun') === 'true';
+  });
 
   const handleSpinClick = () => {
-    if (isSpinning) return;
+    if (isSpinning || hasSpun) return;
 
     setIsSpinning(true);
     setWonPrize(null);
@@ -44,6 +48,8 @@ const App: React.FC = () => {
     setTimeout(() => {
       setIsSpinning(false);
       setWonPrize(PRIZES[winningPrizeIndex]);
+      setHasSpun(true);
+      localStorage.setItem('hasSpun', 'true'); // Simpan status ke localStorage
     }, spinDuration);
   };
 
@@ -66,11 +72,16 @@ const App: React.FC = () => {
 
       <button
         onClick={handleSpinClick}
-        disabled={isSpinning}
+        disabled={isSpinning || hasSpun}
         className="px-12 py-4 bg-yellow-400 text-gray-900 font-bold text-2xl rounded-full shadow-lg hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105 disabled:bg-gray-500 disabled:cursor-not-allowed disabled:scale-100"
+        aria-label={hasSpun ? "Anda sudah melakukan spin" : "Putar roda keberuntungan"}
       >
-        {isSpinning ? 'MEMUTAR...' : 'PUTAR!'}
+        {isSpinning ? 'MEMUTAR...' : hasSpun ? 'SELESAI' : 'PUTAR!'}
       </button>
+      
+      {!hasSpun && (
+         <p className="mt-4 text-sm text-indigo-300">Anda hanya memiliki 1 kali kesempatan.</p>
+      )}
       
       {wonPrize && <PrizeModal prize={wonPrize} onClose={handleCloseModal} />}
     </div>
